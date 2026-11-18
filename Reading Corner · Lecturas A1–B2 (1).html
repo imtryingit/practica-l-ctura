@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reading Corner · Lecturas A1–B2</title>
+<style>
+:root{--bg:#faf7f2;--card:#fff;--ink:#2a2622;--mute:#7a7268;--acc:#c2410c;--hl:#fde4cf;--line:#e8e0d4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1815;--card:#25211d;--ink:#f1ebe3;--mute:#a79d90;--acc:#fb923c;--hl:#4a3322;--line:#3a342d}}
+:root[data-theme="dark"]{--bg:#1b1815;--card:#25211d;--ink:#f1ebe3;--mute:#a79d90;--acc:#fb923c;--hl:#4a3322;--line:#3a342d}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+main{max-width:680px;margin:0 auto;padding:20px 18px 150px}
+h1{font-size:1.6rem;margin:0 0 4px}
+.sub{color:var(--mute);font-family:system-ui,sans-serif;font-size:.9rem;margin:0 0 18px}
+.tabs{display:flex;gap:8px;margin-bottom:18px;font-family:system-ui,sans-serif}
+.tabs button{flex:1;padding:10px 0;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.chips{flex-wrap:wrap}.chips button{flex:none;padding:6px 12px;font-size:.85rem;font-weight:500}
+article{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+article h2{margin:0 0 14px;font-size:1.3rem}
+article p{font-size:1.25rem;line-height:2;margin:0}
+.w{cursor:pointer;border-radius:4px;padding:1px 0}
+.w:hover{background:var(--hl)}
+.w.on{background:var(--acc);color:#fff}
+#tip{position:fixed;left:0;right:0;bottom:0;padding:14px 18px calc(14px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--line);font-family:system-ui,sans-serif;text-align:center}
+#tip b{display:block;font-size:1.3rem;color:var(--acc)}
+#tip span{font-size:1.1rem}
+#tip small{color:var(--mute)}
+</style>
+</head>
+<body>
+<main>
+<h1>Reading Corner</h1>
+<p class="sub">Toca cualquier palabra para ver su traducción al español.</p>
+<div class="tabs" role="tablist" id="tabs"></div>
+<div class="tabs chips" id="chips"></div>
+<article><h2 id="title"></h2><p id="text"></p></article>
+</main>
+<div id="tip"><small>👆 Toca una palabra del texto</small></div>
+<script>
+var S={
+A1:{t:"My Day",x:"My name is Ana. I live in a small house. I have a dog. His name is Max. Every morning I get up at seven. I eat bread and drink coffee. Then I walk with Max in the park. Max is happy. I am happy too."},
+A2:{t:"A Rainy Saturday",x:"Last Saturday it was raining, so Tom stayed at home. He wanted to go to the market, but he did not have an umbrella. His sister called him and said, “Come to my house! We can cook pasta together.” Tom took a taxi and arrived in twenty minutes. They cooked, laughed and watched a movie. It was a perfect day, even with the rain."},
+B1:{t:"The Lost Wallet",x:"Maria was walking to work when she found a wallet on the street. Inside there was some money and an identity card. She could have kept the money, but she decided to return it. She went to the address on the card and knocked on the door. An old man opened it. He was so grateful that he started to cry. “Nobody has ever done something like this for me,” he said. Maria smiled and felt proud of herself."},
+B2:{t:"The Unexpected Offer",x:"Daniel had been working at the same company for ten years when his manager offered him a promotion abroad. Although the salary was tempting, he hesitated. Moving to another country would mean leaving his friends behind and starting over. After weeks of doubt, he realized that staying comfortable was not the same as being happy. He accepted the offer, convinced that regret would hurt more than failure."}
+};
+var M=[
+{l:"A1",t:"My Family",x:"I have a big family. My father is a teacher. My mother is a nurse. I have one brother and one sister. My brother is ten years old. My sister is fifteen. We live together in a blue house. I love my family."},
+{l:"A1",t:"At School",x:"It is Monday. I go to school by bus. My classroom is big. I have a pen and a book. My teacher is nice. She says, “Good morning!” I say, “Good morning, teacher!” I like English class."},
+{l:"A1",t:"The Cat",x:"I have a cat. She is white and black. Her name is Luna. She likes milk and fish. She sleeps on my bed. In the afternoon she plays with a small ball. Luna is my best friend."},
+{l:"A1",t:"My Favorite Food",x:"I like pizza. I eat pizza on Friday. My friend likes hamburgers. We go to a restaurant. I drink orange juice. He drinks water. The food is very good. We are hungry and happy."},
+{l:"A1",t:"At the Park",x:"Today is sunny. I go to the park with my friends. We play football. Sara runs very fast. Then we sit under a tree. We eat apples. The park is beautiful. I want to come again tomorrow."},
+{l:"A1",t:"My Room",x:"This is my room. It is small, but I like it. There is a bed, a desk and a lamp. My books are on the desk. My shoes are under the bed. There is a window. I can see the street from my room."},
+{l:"A2",t:"The Birthday Party",x:"Yesterday was a special day for Laura. It was her birthday. Her friends came to her house at six o clock. They brought presents and a big chocolate cake. Everybody sang a song, and Laura blew out the candles. After that, they danced until midnight. Laura said it was the best birthday of her life."},
+{l:"A2",t:"A Trip to the Beach",x:"Last summer, my family and I went to the beach. We left early in the morning because the road was long. The water was warm, and the sand was white. My brother built a big sandcastle. In the evening we ate fresh fish and watched the sunset. I want to go back next year."},
+{l:"A2",t:"The New Neighbor",x:"A new neighbor moved into the apartment next to mine. His name is Carlos, and he comes from Mexico. He plays the guitar every night, but he is very quiet. Yesterday I invited him for dinner. We talked about music and food for hours. Now we are good friends."},
+{l:"A2",t:"Shopping for Shoes",x:"Paula needed new shoes for a wedding. She visited three stores, but the shoes were too expensive. Finally, she found a beautiful pair on sale. They were red and very comfortable. She paid only twenty dollars. She was so happy that she bought a bag too."},
+{l:"A2",t:"The Missed Bus",x:"Ben woke up late on Wednesday. He quickly took a shower and ran to the bus stop, but the bus was already gone. He waited for twenty minutes in the cold. Then a friend stopped her car and gave him a ride. Ben arrived at work on time and thanked her."},
+{l:"A2",t:"My First Day at Work",x:"On Monday I started my new job in a bank. I was nervous because I did not know anyone. My boss showed me my desk and introduced me to the team. They were friendly, and we had lunch together. At five I went home tired, but happy."},
+{l:"B1",t:"The Language Exchange",x:"Sofia wanted to improve her English, so she joined a language exchange group. At first she was afraid of making mistakes. However, her partner, an American named Jake, was patient and kind. They met every Thursday in a café and talked about their lives. After three months, Sofia could speak with much more confidence."},
+{l:"B1",t:"A Surprise Visit",x:"Last weekend I was cleaning my apartment when the doorbell rang. I opened the door and could not believe my eyes. It was my cousin Diego, who lives in Spain! He had decided to surprise the whole family. We had not seen each other for five years, so we hugged for a long time."},
+{l:"B1",t:"The Broken Phone",x:"Lucas dropped his phone while he was crossing the street, and the screen broke into pieces. He felt terrible because all his photos were inside. A repair shop told him it would cost a lot of money. Fortunately, a friend explained that his pictures were saved online. Lucas learned to make backups."},
+{l:"B1",t:"Learning to Cook",x:"Helen had never cooked before she moved away from home. Her first dinner was a disaster: the rice burned and the soup was too salty. She did not give up. She watched videos, bought a notebook and wrote down every recipe. A few months later, she invited her friends and cooked a delicious meal for everyone."},
+{l:"B1",t:"The Marathon",x:"Pedro decided to run a marathon even though he had never been a sportsman. He trained six days a week, and he stopped eating junk food. The day of the race was hard, and his legs hurt after twenty kilometers. Still, he did not stop. When he crossed the finish line, he was exhausted but incredibly proud."},
+{l:"B1",t:"A Strange Dream",x:"Last night I had a strange dream. I was flying over my city, and everything looked tiny. Suddenly, I saw my old school, and all my classmates were waving at me. I tried to land, but I could not. Then my alarm clock rang, and I woke up. I wonder what it means."},
+{l:"B2",t:"The Remote Worker",x:"Since she started working from home, Clara had noticed that her productivity had increased, yet she felt increasingly isolated. She missed the casual conversations by the coffee machine and the sense of belonging to a team. Eventually, she began renting a desk in a shared office, which gave her the flexibility she wanted without the loneliness she dreaded."},
+{l:"B2",t:"The Missing Painting",x:"When the museum opened on Monday, the guards discovered that the most valuable painting had disappeared. There were no broken windows and no signs of a forced entry, which puzzled the police. After reviewing the security footage, they noticed that a cleaner had been carrying an unusually large bag. The investigation had finally found its first lead."},
+{l:"B2",t:"Second Chances",x:"Marta had failed her driving test three times, and she was beginning to believe she was simply not made for it. Her instructor, however, insisted that nerves were the only thing standing in her way. On her fourth attempt, she took a deep breath, ignored the examiner, and drove as if she were alone on the road. She passed with flying colors."},
+{l:"B2",t:"The Old Bookshop",x:"Tucked away in a narrow alley, the old bookshop had survived for decades despite the rise of online stores. Its owner, a man who rarely spoke, seemed to know exactly which book each customer needed. People said that he could read a stranger within seconds. Whether it was true or not, nobody ever left empty-handed."},
+{l:"B2",t:"A Difficult Conversation",x:"Ahmed had been avoiding the conversation for weeks. He knew that telling his best friend about his decision to move abroad would hurt her, but staying silent seemed even worse. When he finally spoke, she was quiet for a moment and then smiled sadly. “I always knew you would leave,” she admitted. “I just hoped it would be later.”"},
+{l:"B2",t:"The Storm",x:"By the time the storm reached the village, most residents had already boarded up their windows and moved to higher ground. Those who ignored the warnings soon regretted it. The river overflowed, the power went out, and the streets turned into rivers. In the following days, neighbors worked together to rebuild what the water had destroyed."},
+{l:"A1",t:"My Best Friend",x:"My best friend is Tom. He is tall and funny. He has brown hair and green eyes. We are in the same class. He likes music and I like sports. After school we play games. Tom is a good friend."},
+{l:"A1",t:"The Weather",x:"Today is cold and windy. I wear a coat and a hat. My brother wears a scarf. It is winter in my city. In summer it is hot. In spring there are many flowers. I like all the seasons, but I love the summer."},
+{l:"A1",t:"At the Supermarket",x:"I go to the supermarket with my mother. We buy milk, eggs and rice. The apples are red and big. I take a bag of oranges. My mother pays at the door. We go home with a lot of food."},
+{l:"A1",t:"My Week",x:"On Monday I have English. On Tuesday I play tennis. On Wednesday I visit my grandmother. On Thursday I study at home. On Friday I go to the cinema. On Saturday I sleep late. On Sunday I rest."},
+{l:"A1",t:"The Doctor",x:"I am sick today. My head hurts and I am tired. My mother takes me to the doctor. The doctor is kind. She says, “Drink water and rest.” I take a pill. Tomorrow I am better."},
+{l:"A1",t:"Our Garden",x:"We have a small garden behind our house. There are red flowers and green plants. My father waters them every day. A bird lives in the tree. It sings in the morning. I sit in the garden and read a book."},
+{l:"A1",t:"A Phone Call",x:"My phone rings. It is my grandfather. He says, “Hello! How are you?” I say, “I am fine, thank you.” He asks about school. I tell him about my day. We talk for ten minutes. I love my grandfather."},
+{l:"A2",t:"The Cooking Contest",x:"Last month Marco entered a cooking contest in his town. He prepared a chicken soup with fresh vegetables. The judges tasted it and smiled. Marco did not win first prize, but he came in second. He received a small trophy and many compliments. Next year he wants to try again."},
+{l:"A2",t:"Lost in the City",x:"Anna visited Rome for the first time. She walked around all morning and soon she was lost. Her phone had no battery, so she asked a woman for help. The woman showed her the way to the hotel on a map. Anna thanked her and promised to learn Italian."},
+{l:"A2",t:"A Day at the Zoo",x:"On Sunday we took the children to the zoo. They saw lions, monkeys and a giant elephant. The little girl was afraid of the snakes, but she loved the penguins. We had sandwiches for lunch near the lake. At four o clock everybody was tired, and the children fell asleep in the car."},
+{l:"A2",t:"The Gym",x:"Kevin decided to go to the gym three times a week. At first it was difficult, and his muscles hurt a lot. He met a friendly trainer who gave him good advice. After two months he felt stronger and had more energy. Now he cannot imagine his week without exercise."},
+{l:"A2",t:"A Rainy Wedding",x:"It rained all day on the wedding of Julia and Mark. The guests were worried, but the couple stayed calm. They moved the party into the big hall of the hotel. Everyone danced and laughed with wet shoes. It was not the wedding they planned, but they will always remember it."},
+{l:"A2",t:"The Library",x:"Every Saturday Emma goes to the town library. She borrows two books and reads them during the week. Last Saturday she met an old friend there. They sat together, drank tea and talked about their favorite stories. Emma returned home with three books instead of two."},
+{l:"A2",t:"The Lost Dog",x:"Our neighbor lost his dog on Friday. He put posters on the trees and asked everybody in the street. On Sunday a boy found the dog near the river. It was dirty and hungry, but it was fine. The neighbor cried with joy and gave the boy a big reward."},
+{l:"B1",t:"The Job Interview",x:"Elena had been preparing for the interview all week. She practiced the answers in front of the mirror and chose her best suit. Still, when she sat in front of the manager, her hands started to shake. She took a breath and spoke slowly. Two days later, the company called to offer her the job."},
+{l:"B1",t:"A Change of Plans",x:"We were going to spend the weekend in the mountains, but the weather forecast predicted heavy rain. At first we were disappointed. Then my sister suggested staying home and organizing a game night instead. We played cards, ordered pizza and laughed until late. It turned out to be better than the original plan."},
+{l:"B1",t:"The Street Musician",x:"Every morning on my way to work I passed a street musician who played the violin. I never stopped because I was always in a hurry. One day I arrived early and decided to listen. His music was so beautiful that I forgot my worries. Since then, I leave home ten minutes earlier."},
+{l:"B1",t:"Moving Abroad",x:"Isabel moved to Canada to study for her master degree. The first weeks were difficult because she missed her family and the food. She felt lonely until she joined a hiking club. There she made friends from all over the world. By the end of the year, she did not want to leave."},
+{l:"B1",t:"The Neighbor Next Door",x:"Our neighbor was a grumpy old man who complained about everything. One winter, he slipped on the ice and broke his leg. My father offered to bring him groceries every week. Little by little, the man started to smile and even invited us for tea. We learned that people are often kinder than they seem."},
+{l:"B1",t:"A Wrong Number",x:"Yesterday I received a message from an unknown number. It said, “Happy birthday, grandma!” I replied that it was a mistake, but the person insisted I was his grandmother. We exchanged messages for a while and laughed about the confusion. In the end, he sent me a photo of a cake and said it was for me."},
+{l:"B1",t:"The Charity Run",x:"Our company organized a charity run to help sick children. Although I hate running, I signed up because my colleagues convinced me. I was the last person to arrive, but everybody cheered for me. We raised more than five thousand dollars. It was a tiring day, but it gave me a good feeling."},
+{l:"B2",t:"The Whistleblower",x:"After months of hesitation, Rachel decided to report the illegal practices she had witnessed at her company. She knew that doing so could cost her career, and several colleagues warned her to keep quiet. Nevertheless, she felt that silence would make her complicit. The investigation that followed proved her right, although the personal price was higher than she had expected."},
+{l:"B2",t:"A Lesson in Humility",x:"Having won every debate at university, Oliver assumed that his first presentation at work would be effortless. Instead, he was interrupted, challenged and corrected by people with decades of experience. Though humiliated at first, he gradually understood that listening was a skill he had neglected. His next presentation was shorter, humbler and far more convincing."},
+{l:"B2",t:"The Abandoned House",x:"For as long as the villagers could remember, the house at the end of the road had stood empty. Rumors claimed that it was haunted, so children dared each other to approach it. When a young couple finally bought it, they discovered nothing more sinister than a leaking roof and a cellar full of old letters. These letters revealed a love story that nobody had suspected."},
+{l:"B2",t:"The Price of Fame",x:"Lucía never imagined that a single video would change her life overnight. Within days, millions of strangers were commenting on everything she did, praising her one moment and criticizing her the next. Although the attention flattered her at first, she grew exhausted by the constant scrutiny. Eventually she deleted her account, preferring an ordinary life to a public one."},
+{l:"B2",t:"Rebuilding Trust",x:"It took Miguel years to forgive his brother for the argument that had divided the family. Neither of them had been willing to apologize, each convinced the other should speak first. It was the illness of their mother that finally brought them together at the hospital. Standing side by side, they realized how trivial their pride had been."},
+{l:"B2",t:"An Unlikely Friendship",x:"When the elderly widow moved in next door, the teenager assumed they would have nothing in common. However, an accidental conversation about old films revealed a shared passion. Over the following months, she taught him to appreciate classics, while he taught her to use a smartphone. Neither would have predicted how much they would come to rely on one another."},
+{l:"B2",t:"The Deadline",x:"With only two hours left before the deadline, the team was still struggling to finish the report. Tensions were running high, and someone suggested submitting an incomplete version. Instead, Hannah proposed dividing the remaining work according to the strengths of each member. They delivered with five minutes to spare, exhausted yet proud."}
+];
+var L={},C={};Object.keys(S).forEach(function(k){L[k]=[S[k]]});M.forEach(function(s){L[s.l].push(s)});
+async function ask(t,s,r){var k=t.toLowerCase(),res="(no se pudo traducir)";
+  try{var sm=window.claude&&await claude.use("sample");
+    if(sm){var o=await sm("Traduce al español la palabra inglesa «"+t+"» tal como se usa en este texto: "+document.getElementById("text").textContent+"\nResponde solo con la traducción corta (máximo 4 palabras). Si es un verbo conjugado, añade el infinitivo entre paréntesis. Sin explicaciones.",{modelTier:"quick"});res=o.text.trim();C[k]=res}}
+  catch(e){}
+  if(cur===s)r.textContent=res}
+var D={};
+("my:mi|name:nombre|is:es / está|i:yo|live:vivo (vivir)|in:en|a:un / una|small:pequeña|house:casa|have:tengo (tener)|dog:perro|his:su (de él)|every:cada|morning:mañana|get:levantarse (get up)|up:arriba|at:a / en|seven:siete|eat:como (comer)|bread:pan|and:y|drink:bebo (beber)|coffee:café|then:luego|walk:caminar / paseo|with:con|the:el / la|park:parque|happy:feliz|am:soy / estoy|too:también|last:pasado|saturday:sábado|it:eso / ello|was:era / estaba|raining:lloviendo|so:así que|stayed:se quedó|home:casa / hogar|he:él|wanted:quería|to:a / para|go:ir|market:mercado|but:pero|did:(auxiliar del pasado)|not:no|an:un / una|umbrella:paraguas|sister:hermana|called:llamó|him:lo / a él|said:dijo|come:ven (venir)|we:nosotros|can:podemos (poder)|cook:cocinar|pasta:pasta|together:juntos|took:tomó|taxi:taxi|arrived:llegó|twenty:veinte|minutes:minutos|they:ellos|cooked:cocinaron|laughed:rieron|watched:vieron / miraron|movie:película|day:día|perfect:perfecto|even:incluso|rain:lluvia|work:trabajo|when:cuando|she:ella|found:encontró|wallet:billetera|on:en / sobre|street:calle|inside:dentro|there:allí (there was = había)|some:algo de|money:dinero|identity:identidad|card:tarjeta|could:podría|kept:se quedó con / guardó|decided:decidió|return:devolver|went:fue|address:dirección|knocked:golpeó (la puerta)|door:puerta|old:viejo / anciano|man:hombre|opened:abrió|grateful:agradecido|that:que|started:empezó|cry:llorar|nobody:nadie|has:ha / tiene|ever:alguna vez|done:hecho|something:algo|like:como / parecido a|this:esto|for:para / por|me:mí / me|smiled:sonrió|felt:sintió|proud:orgulloso|of:de|herself:ella misma|walking:caminando|had:había / tenía|been:sido / estado|working:trabajando|same:mismo|company:empresa|ten:diez|years:años|manager:jefe / gerente|offered:ofreció|promotion:ascenso|abroad:al extranjero|although:aunque|salary:salario|tempting:tentador|hesitated:dudó|moving:mudarse|another:otro|country:país|would:(condicional) -ría|mean:significar|leaving:dejar|friends:amigos|behind:atrás|starting:empezando (start over = empezar de nuevo)|over:de nuevo|after:después de|weeks:semanas|doubt:duda|realized:se dio cuenta|staying:quedarse|comfortable:cómodo|being:ser / estar|accepted:aceptó|offer:oferta|convinced:convencido|regret:arrepentimiento|hurt:dolería (doler)|more:más|than:que|failure:fracaso|ana:(nombre propio)|max:(nombre propio)|tom:(nombre propio)|maria:(nombre propio)|daniel:(nombre propio)").split("|").forEach(function(e){var i=e.indexOf(":");D[e.slice(0,i)]=e.slice(i+1)});
+var tabs=document.getElementById("tabs"),tip=document.getElementById("tip"),cur=null;
+function show(l,i){i=i||0;var st=L[l][i];
+  document.getElementById("title").textContent=l+" · "+st.t;
+  var p=document.getElementById("text");p.textContent="";
+  (st.x.match(/[A-Za-z]+|[^A-Za-z]+/g)||[]).forEach(function(t){
+    if(/^[A-Za-z]/.test(t)){var s=document.createElement("span");s.className="w";s.textContent=t;
+      s.onclick=function(){
+        if(cur)cur.classList.remove("on");cur=s;s.classList.add("on");
+        var k=t.toLowerCase(),known=D[k]||C[k],tr=known||"Traduciendo…";
+        tip.innerHTML="";var b=document.createElement("b");b.textContent=t;var r=document.createElement("span");r.textContent=tr;tip.appendChild(b);tip.appendChild(r);if(!known)ask(t,s,r)};
+      p.appendChild(s)}
+    else p.appendChild(document.createTextNode(t))});
+  Array.prototype.forEach.call(tabs.children,function(b){b.setAttribute("aria-selected",b.textContent===l)});
+  var ch=document.getElementById("chips");ch.textContent="";L[l].forEach(function(x,j){var b=document.createElement("button");b.textContent=(j+1)+". "+x.t;b.setAttribute("aria-selected",j===i);b.onclick=function(){show(l,j)};ch.appendChild(b)});
+  tip.innerHTML="<small>👆 Toca una palabra del texto</small>";cur=null}
+Object.keys(S).forEach(function(l){var b=document.createElement("button");b.textContent=l;b.setAttribute("role","tab");b.onclick=function(){show(l)};tabs.appendChild(b)});
+show("B1");
+</script>
+</body>
+</html>
